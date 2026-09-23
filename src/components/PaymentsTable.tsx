@@ -3,7 +3,8 @@ import { StatusBadge, Table, TableCell, TableHeader, TableRow, TableWrapper } fr
 import { I18N } from '../constants/i18n'
 import { formatDateTime } from "../helpers/formatDate"
 
-export const PaymentsTable = ({ data }: { data: PaymentSearchResponse }) => {
+export const PaymentsTable = ({ data }: { data: PaymentSearchResponse | undefined }) => {
+    // This table's styling jumps when there are no results, so we can add a placeholder row to keep the table height consistent.
     return (
         <TableWrapper>
             <Table>
@@ -18,7 +19,7 @@ export const PaymentsTable = ({ data }: { data: PaymentSearchResponse }) => {
                     </TableRow>
                 </thead>
                 <tbody>
-                    {data.payments.map((payment) => (
+                    { data?.payments.map((payment) => (
                         <TableRow key={payment.id}>
                             <TableCell>{payment.id}</TableCell>
                             <TableCell>{formatDateTime(payment.date)}</TableCell>
