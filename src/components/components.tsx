@@ -27,7 +27,7 @@ export const FlexRow = styled.div`
   }
 `;
 
-export const FilterRow = styled.div`
+export const FilterRow = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1rem;

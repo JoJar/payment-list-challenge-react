@@ -1,19 +1,23 @@
+import { withSpan } from '../telemetry/withSpan';
 import { Container, EmptyBox, ErrorBox, Spinner, Title } from './components'
 import { I18N } from '../constants/i18n'
 import { CURRENCIES } from '../constants';
 import { useQuery } from '@tanstack/react-query';
-import { PaymentsTable } from './PaymentsTable';
+import PaymentsTable from './PaymentsTable';
 import { getPayments } from '../api';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { PaymentFilters } from './PaymentFilters';
 import { PaginationControls } from './PaginationControls';
 
 type Currency = (typeof CURRENCIES)[number];
 
+export type PaymentFilterTrigger = 'search' | 'currency_change' | 'clear' | 'pagination';
+
 export interface PaymentFilterValues {
   search: string;
   currency: Currency | "";
-  page: number
+  page: number;
+  trigger?: PaymentFilterTrigger;
 }
 
 // could add page size filter
@@ -28,18 +32,35 @@ export const PaymentsPage = () => {
   
   const { isFetching, isPending, error, data } = useQuery({
     queryKey: ['paymentData', paymentFilters],
-    queryFn: () => getPayments({ searchTerm: paymentFilters.search, currency: paymentFilters.currency, page: paymentFilters.page }),
+    queryFn: () => withSpan(
+      'payment.search.fetch',
+      {
+        'payment.search.term': paymentFilters.search,
+        'payment.currency': paymentFilters.currency,
+        'payment.page': paymentFilters.page,
+        'payment.trigger': paymentFilters.trigger ?? 'initial_load',
+      },
+      async () => {
+        const result = await getPayments({
+          searchTerm: paymentFilters.search,
+          currency: paymentFilters.currency,
+          page: paymentFilters.page,
+        })
+
+        return result
+      }
+    )
   })
 
   const totalPages = data ? Math.ceil(data.total / data.pageSize) : 0;
 
-  const handleClearFilters = () => {
-    setPaymentFilters(defaultFilters)
-  }
+  const handleClearFilters = useCallback(() => {
+    setPaymentFilters({...defaultFilters, trigger: 'clear' });
+  }, [])
 
-  const handleFilterChange = (newFilter: Partial<PaymentFilterValues>) => {
+  const handleFilterChange = useCallback((newFilter: Partial<PaymentFilterValues>) => {
     setPaymentFilters((prevFilters) => ({ ...prevFilters, ...newFilter }));
-  }
+  }, [])
 
   return ( 
     <Container>

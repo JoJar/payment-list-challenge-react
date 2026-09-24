@@ -11,13 +11,13 @@ interface PaginationControlsProps {
 export const PaginationControls = ({ currentPage, totalPages, onChange }: PaginationControlsProps) => {
     const handlePrevious = () => {
         if (currentPage > 1) {
-            onChange({ page: currentPage - 1 });
+            onChange({ page: currentPage - 1, trigger: 'pagination' });
         }
     };
 
     const handleNext = () => {
         if (currentPage < totalPages) {
-            onChange({ page: currentPage + 1 });
+            onChange({ page: currentPage + 1, trigger: 'pagination' });
         }
     };
 

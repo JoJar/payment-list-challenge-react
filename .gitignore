@@ -1,2 +1,6 @@
 node_modules
 dist
+/coverage
+tsconfig.app.tsbuildinfo
+tsconfig.node.tsbuildinfo
+junit.xml

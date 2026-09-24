@@ -2,9 +2,9 @@ import { PaymentSearchResponse } from "../types/payment"
 import { StatusBadge, Table, TableCell, TableHeader, TableRow, TableWrapper } from './components'
 import { I18N } from '../constants/i18n'
 import { formatDateTime } from "../helpers/formatDate"
+import { memo } from "react"
 
-export const PaymentsTable = ({ data }: { data: PaymentSearchResponse | undefined }) => {
-    // This table's styling jumps when there are no results, so we can add a placeholder row to keep the table height consistent.
+const PaymentsTable = ({ data }: { data: PaymentSearchResponse | undefined }) => {
     return (
         <TableWrapper>
             <Table>
@@ -38,3 +38,5 @@ export const PaymentsTable = ({ data }: { data: PaymentSearchResponse | undefine
         </TableWrapper>
     )
 }
+
+export default memo(PaymentsTable)
