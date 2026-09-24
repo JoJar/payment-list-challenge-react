@@ -26,9 +26,11 @@ export const I18N = {
   TABLE_HEADER_STATUS: "Status",
   
   // Pagination
+  PAGINATION_NAVIGATION: "Pagination navigation",
   PREVIOUS_BUTTON: "◀ Previous",
   NEXT_BUTTON: "Next ▶",
   PAGE_LABEL: "Page",
+  PAGE_PREPOSITION: "of",
   
   // Messages
   NO_PAYMENTS_FOUND: "No payments found.",

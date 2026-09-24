@@ -59,6 +59,9 @@ export const SearchInput = styled.input`
 `;
 
 export const Select = styled.select`
+  // -webkit-appearance: none;
+  // -moz-appearance: none;
+  // appearance: none;
   padding: 0.5rem;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
@@ -217,6 +220,10 @@ export const PaginationButton = styled.button`
     opacity: 0.5;
     cursor: not-allowed;
   }
+`;
+
+export const PaginationInfo = styled.span`
+  margin-left: 0;
 `;
 
 export const TableHeaderWrapper = styled.thead`

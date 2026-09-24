@@ -13,11 +13,15 @@ export const PaymentIdSearchInput = ({ onSearch }: PaymentIdSearchInputProps) =>
         e.preventDefault()
         onSearch(searchTerm.trim())
     }
-    
+    // err handling , on clear handling
+    // auto complete?
     return (
-        <form onSubmit={handleSubmit}>
+        <form role="search" onSubmit={handleSubmit}>
+            <label htmlFor="payment-id-search" hidden >{I18N.SEARCH_LABEL}</label>
             <SearchInput
                 type="search"
+                id="payment-id-search"
+                name="payment-id-search"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={I18N.SEARCH_PLACEHOLDER}
