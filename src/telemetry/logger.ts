@@ -1,7 +1,7 @@
 import { LoggerProvider, BatchLogRecordProcessor } from '@opentelemetry/sdk-logs';
 import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-http';
 import { AnyValueMap, logs, SeverityNumber } from '@opentelemetry/api-logs';
-import { resource } from './telemetry';
+import { resource } from './browserTelemetry';
 import { context, Context } from '@opentelemetry/api';
 
 const TELEMETRY_ENABLED = import.meta.env.VITE_ENABLE_TELEMETRY === 'true';

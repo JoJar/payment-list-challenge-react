@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ClearButton, SearchButton, SearchInput, FilterRow, Select } from "./components";
 import { I18N } from "../constants/i18n";
 import { CURRENCIES } from "../constants";
-import { PAYMENT_FILTER_TRIGGER, type PaymentFilterValues } from './PaymentPage.types';
+import { PAYMENT_FILTER_TRIGGER, type PaymentFilterValues } from './PaymentsPage.types';
 
 interface PaymentIdSearchInputProps {
     onChange: (changes: Partial<PaymentFilterValues>) => void;

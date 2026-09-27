@@ -1,6 +1,6 @@
 import { I18N } from "../constants/i18n";
 import { PaginationButton, PaginationInfo, PaginationRow } from "./components";
-import { PaymentFilterValues } from "./PaymentsPage";
+import { PAYMENT_FILTER_TRIGGER, type PaymentFilterValues } from "./PaymentsPage.types";
 
 interface PaginationControlsProps {
     currentPage: number;
@@ -11,13 +11,13 @@ interface PaginationControlsProps {
 export const PaginationControls = ({ currentPage, totalPages, onChange }: PaginationControlsProps) => {
     const handlePrevious = () => {
         if (currentPage > 1) {
-            onChange({ page: currentPage - 1, trigger: 'pagination' });
+            onChange({ page: currentPage - 1, trigger: PAYMENT_FILTER_TRIGGER.PAGINATION });
         }
     };
 
     const handleNext = () => {
         if (currentPage < totalPages) {
-            onChange({ page: currentPage + 1, trigger: 'pagination' });
+            onChange({ page: currentPage + 1, trigger: PAYMENT_FILTER_TRIGGER.PAGINATION });
         }
     };
 

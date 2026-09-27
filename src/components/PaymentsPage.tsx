@@ -1,4 +1,4 @@
-import { withSpan } from '../telemetry/withSpan';
+import { withTrace } from '../telemetry/withTrace';
 import { Container, EmptyBox, ErrorBox, Spinner, Title } from './components'
 import { I18N } from '../constants/i18n'
 import { useQuery } from '@tanstack/react-query';
@@ -7,7 +7,7 @@ import { getPayments } from '../api';
 import { useCallback, useState } from 'react';
 import { PaymentFilters } from './PaymentFilters';
 import { PaginationControls } from './PaginationControls';
-import { PAYMENT_FILTER_TRIGGER, type PaymentFilterValues } from './PaymentPage.types';
+import { PAYMENT_FILTER_TRIGGER, type PaymentFilterValues } from './PaymentsPage.types';
 
 const defaultFilters: PaymentFilterValues = {
   search: "",
@@ -20,7 +20,7 @@ export const PaymentsPage = () => {
   
   const { isFetching, isPending, error, data } = useQuery({
     queryKey: ['paymentData', paymentFilters],
-    queryFn: () => withSpan(
+    queryFn: () => withTrace(
       'payment.search.fetch',
       {
         'payment.search.term': paymentFilters.search,

@@ -1,5 +1,5 @@
 import 'zone.js';
-import './telemetry/telemetry';
+import './telemetry/browserTelemetry';
 import './telemetry/logger'
 import React from 'react';
 import ReactDOM from 'react-dom/client';
