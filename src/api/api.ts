@@ -29,7 +29,7 @@ export const getPayments = async ({ page, pageSize, searchTerm, currency }: GetP
         params.append('currency', currency);
     }
     const queryString = params.toString();
-    console.log(queryString)
+
     const url = queryString ? `${API_URL}?${queryString}` : API_URL;
 
     const response = await fetch(url);

@@ -1,7 +1,7 @@
 import path from 'path'
 import express from 'express'
 import cors from 'cors'
-import aspireRoutes from './telemetry'
+import aspireRoutes from './middleware/telemetry'
 
 const app = express()
 const port = Number(process.env.PORT || 3000)
@@ -9,12 +9,13 @@ const port = Number(process.env.PORT || 3000)
 app.use(cors())
 app.use(express.json({ limit: '5mb' }))
 
-app.use((req, _res, next) => {
-  console.log(`${req.method} ${req.path}`)
-  next()
-})
+if (process.env.NODE_ENV === 'development') {
+  app.use((req, _res, next) => {
+      console.log(`${req.method} ${req.path}`)
+    next()
+  })
+}
 
-// health endpoint
 app.get('/health', (_req, res) => res.json({ status: 'healthy' }))
 
 // forward telemetry requests to Aspire
@@ -27,7 +28,6 @@ app.use(express.static(distDir))
 
 // SPA fallback: only for GET navigations and NOT for API/proxy
 app.use((req, res, next) => {
-  // if (req.method !== 'GET') return next()
   if (req.path.startsWith('/api')) return next()
   if (req.accepts && req.accepts('html')) {
     return res.sendFile(path.join(distDir, 'index.html'))

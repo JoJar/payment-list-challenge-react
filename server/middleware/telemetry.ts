@@ -4,8 +4,11 @@ import axios from 'axios'
 const aspireRouter = express.Router()
 
 // Default to Aspire's local OTLP/HTTP traces endpoint
-const ASPIRE_TRACE_URL = 'http://localhost:18890/v1/traces'
-const ASPIRE_LOGS_URL = 'http://localhost:18890/v1/logs'
+const ASPIRE_BASE_URL =
+  process.env.ASPIRE_BASE_URL || 'http://aspire-dashboard:18890'
+
+const ASPIRE_TRACE_URL = `${ASPIRE_BASE_URL}/v1/traces`
+const ASPIRE_LOGS_URL = `${ASPIRE_BASE_URL}/v1/logs`
 const ASPIRE_KEY = process.env.ASPIRE_API_KEY
 
 aspireRouter.post('/traces', async (req, res) => {

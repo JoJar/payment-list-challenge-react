@@ -1,40 +1,47 @@
 import 'zone.js';
-import { log } from './logs'
-import { tracer } from './telemetry'
-import { context, trace, SpanStatusCode } from '@opentelemetry/api'
+import logger from './logger';
+import { tracer } from './telemetry';
+import { context, trace, SpanStatusCode } from '@opentelemetry/api';
+
+const TELEMETRY_ENABLED =
+  import.meta.env.VITE_ENABLE_TELEMETRY === 'true';
 
 export async function withSpan<T>(
   name: string,
   attributes: Record<string, string | number | boolean>,
   fn: () => Promise<T>
 ): Promise<T> {
-  const span = tracer.startSpan(name, { attributes })
-  const ctx = trace.setSpan(context.active(), span)
+  if (!TELEMETRY_ENABLED) {
+    return fn();
+  }
+  
+  const parentCtx = context.active();
+  const span = tracer.startSpan(name, { attributes }, parentCtx);
+  const spanCtx = trace.setSpan(parentCtx, span);
 
-  return context.with(ctx, async () => {
+  return context.with(spanCtx, async () => {
     try {
-      const result = await fn()
-      span.setStatus({ code: SpanStatusCode.OK })
-      return result
+      const result = await fn();
+      span.setStatus({ code: SpanStatusCode.OK });
+      return result;
     } catch (err) {
-      const error = err instanceof Error ? err : new Error(String(err))
-      const message = `${name} failed: ${error.message}`
+      const error = err instanceof Error ? err : new Error(String(err));
 
       span.setStatus({
         code: SpanStatusCode.ERROR,
         message: error.message,
-      })
-      span.recordException(error)
+      });
+      span.recordException(error);
 
-      log.error(message, {
+      logger.error(`${name} failed: ${error.message}`, {
         error: error.message,
         stack: error.stack ?? '',
         ...attributes,
-      }, ctx)
+      }, spanCtx);
 
-      throw err
+      throw err;
     } finally {
-      span.end()
+      span.end();
     }
-  })
+  });
 }

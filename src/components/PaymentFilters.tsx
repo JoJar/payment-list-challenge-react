@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { ClearButton, SearchButton, SearchInput, FilterRow, Select } from "./components";
 import { I18N } from "../constants/i18n";
 import { CURRENCIES } from "../constants";
-import { PaymentFilterValues } from "./PaymentsPage";
+import { PAYMENT_FILTER_TRIGGER, type PaymentFilterValues } from './PaymentPage.types';
 
 interface PaymentIdSearchInputProps {
-    // onSearch: (value: string) => void;
     onChange: (changes: Partial<PaymentFilterValues>) => void;
     onClear: () => void;
     paymentFilters: PaymentFilterValues;
@@ -21,17 +20,15 @@ export const PaymentFilters = ({ onChange, onClear, paymentFilters }: PaymentIdS
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()
-        onChange({ search: searchTerm.trim(), page: 1, trigger: 'search' })
+        onChange({ search: searchTerm.trim(), page: 1, trigger: PAYMENT_FILTER_TRIGGER.SEARCH })
     }
 
     const handleCurrencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        onChange({ currency: e.target.value, page: 1, trigger: 'currency_change' })
+        onChange({ currency: e.target.value, page: 1, trigger: PAYMENT_FILTER_TRIGGER.CURRENCY_CHANGE })
     }
 
     return (
         <FilterRow onSubmit={handleSearch}>
-            <label htmlFor="payment-id-search" className="sr-only" >{I18N.SEARCH_LABEL}</label>
-            
             <SearchInput
                     type="search"
                     id="payment-id-search"
@@ -39,18 +36,27 @@ export const PaymentFilters = ({ onChange, onClear, paymentFilters }: PaymentIdS
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder={I18N.SEARCH_PLACEHOLDER}
+                    aria-label={I18N.SEARCH_LABEL}
             />
-            <SearchButton type="submit" onClick={handleSearch}>{I18N.SEARCH_BUTTON}</SearchButton>
-            <label htmlFor="currency-filter" className="sr-only">{I18N.CURRENCY_FILTER_LABEL}</label>
-            <Select id="currency-filter" value={paymentFilters.currency} onChange={handleCurrencyChange}>
-                <option key="all-currencies" aria-label="All currencies" value="">{I18N.EMPTY_CURRENCY}</option>
+            <SearchButton type="submit" onClick={handleSearch}>
+                {I18N.SEARCH_BUTTON}
+            </SearchButton>
+            <Select 
+                id="currency-filter" 
+                value={paymentFilters.currency} 
+                onChange={handleCurrencyChange} 
+                aria-label={I18N.CURRENCY_FILTER_LABEL}
+            >
+                <option key="all-currencies" value="">{I18N.CURRENCIES_OPTION}</option>
                 {
                     CURRENCIES.map((currency) => (
                         <option key={currency} value={currency}>{currency}</option>
                     ))
                 }
             </Select>
-            <ClearButton hidden={!hasActiveFilters} onClick={onClear}>{I18N.CLEAR_FILTERS}</ClearButton>
+            <ClearButton type="button" hidden={!hasActiveFilters} onClick={onClear}>
+                {I18N.CLEAR_FILTERS}
+            </ClearButton>
             
         </FilterRow>
     )

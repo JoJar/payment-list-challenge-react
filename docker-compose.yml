@@ -1,6 +1,21 @@
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      ASPIRE_BASE_URL: http://aspire-dashboard:18890
+      VITE_ENABLE_TELEMETRY: "true"
+    command: npm run start
+
   aspire-dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
+    environment:
+      ASPIRE_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: "true"
     ports:
       - "18888:18888"
       - "4317:18889"

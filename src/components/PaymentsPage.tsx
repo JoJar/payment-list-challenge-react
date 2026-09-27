@@ -1,26 +1,14 @@
 import { withSpan } from '../telemetry/withSpan';
 import { Container, EmptyBox, ErrorBox, Spinner, Title } from './components'
 import { I18N } from '../constants/i18n'
-import { CURRENCIES } from '../constants';
 import { useQuery } from '@tanstack/react-query';
 import PaymentsTable from './PaymentsTable';
 import { getPayments } from '../api';
 import { useCallback, useState } from 'react';
 import { PaymentFilters } from './PaymentFilters';
 import { PaginationControls } from './PaginationControls';
+import { PAYMENT_FILTER_TRIGGER, type PaymentFilterValues } from './PaymentPage.types';
 
-type Currency = (typeof CURRENCIES)[number];
-
-export type PaymentFilterTrigger = 'search' | 'currency_change' | 'clear' | 'pagination';
-
-export interface PaymentFilterValues {
-  search: string;
-  currency: Currency | "";
-  page: number;
-  trigger?: PaymentFilterTrigger;
-}
-
-// could add page size filter
 const defaultFilters: PaymentFilterValues = {
   search: "",
   currency: "",
@@ -38,7 +26,7 @@ export const PaymentsPage = () => {
         'payment.search.term': paymentFilters.search,
         'payment.currency': paymentFilters.currency,
         'payment.page': paymentFilters.page,
-        'payment.trigger': paymentFilters.trigger ?? 'initial_load',
+        'payment.trigger': paymentFilters.trigger ?? PAYMENT_FILTER_TRIGGER.INITIAL_LOAD,
       },
       async () => {
         const result = await getPayments({
@@ -55,7 +43,7 @@ export const PaymentsPage = () => {
   const totalPages = data ? Math.ceil(data.total / data.pageSize) : 0;
 
   const handleClearFilters = useCallback(() => {
-    setPaymentFilters({...defaultFilters, trigger: 'clear' });
+    setPaymentFilters({...defaultFilters, trigger: PAYMENT_FILTER_TRIGGER.CLEAR });
   }, [])
 
   const handleFilterChange = useCallback((newFilter: Partial<PaymentFilterValues>) => {
